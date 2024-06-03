@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
@@ -105,13 +104,11 @@ func TestRegexRulesSingle(t *testing.T) {
 			view.Unregister(view.Find(statName))
 		})
 
-		spew.Dump(diagUtils.WithTags(testStat.Name(), methodKey, "/orders/456"))
 		stats.RecordWithTags(context.Background(),
 			diagUtils.WithTags(testStat.Name(), methodKey, "/orders/123"),
 			testStat.M(1))
 
 		viewData, _ := view.RetrieveData(statName)
-		spew.Dump(viewData)
 		v := view.Find(statName)
 
 		allTagsPresent(t, v, viewData[0].Tags)
