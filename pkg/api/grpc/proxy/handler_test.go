@@ -66,12 +66,15 @@ const (
 const (
 	serviceInvocationRequestSentName  = "runtime/service_invocation/req_sent_total"
 	serviceInvocationResponseRecvName = "runtime/service_invocation/res_recv_total"
+	serviceInvocationRecvLatencyName  = "runtime/service_invocation/res_recv_latency_ms"
 )
 
 func metricsCleanup() {
 	diag.CleanupRegisteredViews(
 		serviceInvocationRequestSentName,
-		serviceInvocationResponseRecvName)
+		serviceInvocationResponseRecvName,
+		serviceInvocationRecvLatencyName,
+	)
 }
 
 var testLogger = logger.NewLogger("proxy-test")

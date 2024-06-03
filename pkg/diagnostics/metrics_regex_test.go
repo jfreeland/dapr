@@ -13,6 +13,62 @@ import (
 	diagUtils "github.com/dapr/dapr/pkg/diagnostics/utils"
 )
 
+const (
+	componentLatencyConfigurationName     = "component/configuration/latencies"
+	componentLatencyCryptoName            = "component/crypto/latencies"
+	componentLatencyInputBindingName      = "component/input_binding/latencies"
+	componentLatencyOutputBindingName     = "component/output_binding/latencies"
+	componentLatencyPubsubEgressBulkName  = "component/pubsub_egress/bulk/latencies"
+	componentLatencyPubsubEgressName      = "component/pubsub_egress/latencies"
+	componentLatencyPubsubIngressBulkName = "component/pubsub_ingress/bulk/latencies"
+	componentLatencyPubsubIngressName     = "component/pubsub_ingress/latencies"
+	componentLatencySecretName            = "component/secret/latencies"
+	componentLatencyStateName             = "component/state/latencies"
+	grpcHealthprobesLatencyName           = "grpc.io/healthprobes/roundtrip_latency"
+	grpcRoundtripLatencyName              = "grpc.io/client/roundtrip_latency"
+	grpcServerLatencyName                 = "grpc.io/server/server_latency"
+	httpClientRoundtripLatencyName        = "http/client/roundtrip_latency"
+	httpHealthprobesLatencyName           = "http/healthprobes/roundtrip_latency"
+	httpServerLatencyName                 = "http/server/latency"
+	resiliencyActivationViewName          = "resiliency/activations_total"
+	resiliencyCountViewName               = "resiliency/count"
+	resiliencyLoadedViewName              = "resiliency/loaded"
+	serviceInvocationRecvLatencyName      = "runtime/service_invocation/res_recv_latency_ms"
+	workflowActivityLatencyName           = "runtime/workflow/activity/execution/latency"
+	workflowExecutionLatencyName          = "runtime/workflow/execution/latency"
+	workflowOperationLatencyName          = "runtime/workflow/operation/latency"
+	workflowSchedulingLatencyName         = "runtime/workflow/scheduling/latency"
+)
+
+func cleanupRegisteredViews() {
+	CleanupRegisteredViews(
+		componentLatencyConfigurationName,
+		componentLatencyCryptoName,
+		componentLatencyInputBindingName,
+		componentLatencyOutputBindingName,
+		componentLatencyPubsubEgressBulkName,
+		componentLatencyPubsubEgressName,
+		componentLatencyPubsubIngressBulkName,
+		componentLatencyPubsubIngressName,
+		componentLatencySecretName,
+		componentLatencyStateName,
+		grpcHealthprobesLatencyName,
+		grpcRoundtripLatencyName,
+		grpcServerLatencyName,
+		httpClientRoundtripLatencyName,
+		httpHealthprobesLatencyName,
+		httpServerLatencyName,
+		resiliencyActivationViewName,
+		resiliencyCountViewName,
+		resiliencyLoadedViewName,
+		serviceInvocationRecvLatencyName,
+		workflowActivityLatencyName,
+		workflowExecutionLatencyName,
+		workflowOperationLatencyName,
+		workflowSchedulingLatencyName,
+	)
+}
+
 func TestRegexRulesSingle(t *testing.T) {
 	const statName = "test_stat_regex"
 	methodKey := tag.MustNewKey("method")
@@ -20,7 +76,9 @@ func TestRegexRulesSingle(t *testing.T) {
 	latencyDistributionBuckets := []float64{5, 50, 500, 5_000}
 	latencyDistribution := view.Distribution(latencyDistributionBuckets...)
 
-	InitMetrics("testAppId2", "", []config.MetricsRule{
+	cleanupRegisteredViews()
+
+	err := InitMetrics("testAppId2", "", []config.MetricsRule{
 		{
 			Name: statName,
 			Labels: []config.MetricLabel{
@@ -34,6 +92,9 @@ func TestRegexRulesSingle(t *testing.T) {
 			},
 		},
 	}, false, latencyDistributionBuckets)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	t.Run("single regex rule applied", func(t *testing.T) {
 		view.Register(

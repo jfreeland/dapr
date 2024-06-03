@@ -20,22 +20,65 @@ import (
 )
 
 const (
-	resiliencyCountViewName      = "resiliency/count"
-	resiliencyActivationViewName = "resiliency/activations_total"
-	resiliencyLoadedViewName     = "resiliency/loaded"
-	testAppID                    = "fakeID"
-	testResiliencyName           = "testResiliency"
-	testResiliencyNamespace      = "testNamespace"
-	testStateStoreName           = "testStateStore"
+	componentLatencyConfigurationName     = "component/configuration/latencies"
+	componentLatencyCryptoName            = "component/crypto/latencies"
+	componentLatencyInputBindingName      = "component/input_binding/latencies"
+	componentLatencyOutputBindingName     = "component/output_binding/latencies"
+	componentLatencyPubsubEgressBulkName  = "component/pubsub_egress/bulk/latencies"
+	componentLatencyPubsubEgressName      = "component/pubsub_egress/latencies"
+	componentLatencyPubsubIngressBulkName = "component/pubsub_ingress/bulk/latencies"
+	componentLatencyPubsubIngressName     = "component/pubsub_ingress/latencies"
+	componentLatencySecretName            = "component/secret/latencies"
+	componentLatencyStateName             = "component/state/latencies"
+	grpcHealthprobesLatencyName           = "grpc.io/healthprobes/roundtrip_latency"
+	grpcRoundtripLatencyName              = "grpc.io/client/roundtrip_latency"
+	grpcServerLatencyName                 = "grpc.io/server/server_latency"
+	httpClientRoundtripLatencyName        = "http/client/roundtrip_latency"
+	httpHealthprobesLatencyName           = "http/healthprobes/roundtrip_latency"
+	httpServerLatencyName                 = "http/server/latency"
+	resiliencyActivationViewName          = "resiliency/activations_total"
+	resiliencyCountViewName               = "resiliency/count"
+	resiliencyLoadedViewName              = "resiliency/loaded"
+	serviceInvocationRecvLatencyName      = "runtime/service_invocation/res_recv_latency_ms"
+	workflowActivityLatencyName           = "runtime/workflow/activity/execution/latency"
+	workflowExecutionLatencyName          = "runtime/workflow/execution/latency"
+	workflowOperationLatencyName          = "runtime/workflow/operation/latency"
+	workflowSchedulingLatencyName         = "runtime/workflow/scheduling/latency"
+	testAppID                             = "fakeID"
+	testResiliencyName                    = "testResiliency"
+	testResiliencyNamespace               = "testNamespace"
+	testStateStoreName                    = "testStateStore"
 )
 
 var latencyDistributionBuckets = []float64{5, 50, 500, 5_000}
 
 func cleanupRegisteredViews() {
 	diag.CleanupRegisteredViews(
+		componentLatencyConfigurationName,
+		componentLatencyCryptoName,
+		componentLatencyInputBindingName,
+		componentLatencyOutputBindingName,
+		componentLatencyPubsubEgressBulkName,
+		componentLatencyPubsubEgressName,
+		componentLatencyPubsubIngressBulkName,
+		componentLatencyPubsubIngressName,
+		componentLatencySecretName,
+		componentLatencyStateName,
+		grpcHealthprobesLatencyName,
+		grpcRoundtripLatencyName,
+		grpcServerLatencyName,
+		httpClientRoundtripLatencyName,
+		httpHealthprobesLatencyName,
+		httpServerLatencyName,
+		resiliencyActivationViewName,
 		resiliencyCountViewName,
 		resiliencyLoadedViewName,
-		resiliencyActivationViewName)
+		serviceInvocationRecvLatencyName,
+		workflowActivityLatencyName,
+		workflowExecutionLatencyName,
+		workflowOperationLatencyName,
+		workflowSchedulingLatencyName,
+	)
 }
 
 func TestResiliencyCountMonitoring(t *testing.T) {
